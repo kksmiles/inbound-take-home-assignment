@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Movie;
 use App\Services\Omdb\OmdbClient;
+use Illuminate\Support\Collection;
 
 class MovieRepository
 {
@@ -78,6 +79,21 @@ class MovieRepository
             ];
         }
         Movie::upsert($rows, ['imdb_id'], ['title', 'year', 'type', 'poster_url', 'raw_payload', 'updated_at']);
+    }
+
+    /**
+     * @param  array<int, string>  $imdbIds
+     * @return Collection<int, Movie>
+     */
+    public function findManyByImdbIds(array $imdbIds): Collection
+    {
+        if ($imdbIds === []) {
+            return collect();
+        }
+
+        return Movie::withIsFavorited()
+            ->whereIn('imdb_id', $imdbIds)
+            ->get();
     }
 
     public function getRecent(int $limit = 10)

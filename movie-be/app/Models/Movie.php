@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Auth;
 
 class Movie extends Model
@@ -24,14 +25,12 @@ class Movie extends Model
         'loaded_details',
     ];
 
-    /**
-     * @var array<string, string>
-     */
     protected $casts = [
         'raw_payload' => 'array',
+        'loaded_details' => 'bool',
     ];
 
-    public function favorites()
+    public function favorites(): HasMany
     {
         return $this->hasMany(Favorite::class);
     }

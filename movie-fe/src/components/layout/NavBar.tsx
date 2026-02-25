@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate, Link as RouterLink } from 'react-router-dom'
+import { useLocation, useNavigate, Link as RouterLink } from 'react-router-dom'
 import {
   Box,
   Flex,
@@ -15,6 +15,7 @@ import { clearLocalFavorites } from '../../helpers/favorites'
 
 export function NavBar() {
   const navigate = useNavigate()
+  const location = useLocation()
   const [isLoggingOut, setIsLoggingOut] = useState(false)
 
   const handleLogout = async () => {
@@ -44,7 +45,7 @@ export function NavBar() {
           </HStack>
 
           <HStack gap={3}>
-            {['/healthcheck'].includes(window.location.pathname) ? (
+            {location.pathname === '/healthcheck' ? (
               <Button
                 variant="outline"
                 onClick={() => navigate('/movies')}
@@ -61,7 +62,7 @@ export function NavBar() {
                 Health check
               </Button>
             )}
-            {!['/login', '/register'].includes(window.location.pathname) &&
+            {!['/login', '/register'].includes(location.pathname) &&
               (isAuthenticated() ? (
                 <Button
                   colorScheme="red"

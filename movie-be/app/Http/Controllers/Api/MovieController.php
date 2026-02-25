@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\MovieResource;
-use App\Models\Movie;
 use App\Repositories\MovieRepository;
 use App\Services\Omdb\OmdbClient;
 use Illuminate\Http\JsonResponse;
@@ -17,12 +16,12 @@ class MovieController extends Controller
         private readonly MovieRepository $movies,
     ) {}
 
-    public function index()
+    public function index(Request $request): JsonResponse
     {
         $movies = $this->movies->getRecent(10);
 
         return MovieResource::collection($movies)
-            ->toResponse(request());
+            ->toResponse($request);
     }
 
     public function search(Request $request): JsonResponse
@@ -43,7 +42,7 @@ class MovieController extends Controller
         }
 
         $imdbIds = collect($searchItems)->pluck('imdbID')->toArray();
-        $movies = Movie::withIsFavorited()->whereIn('imdb_id', $imdbIds)->get();
+        $movies = $this->movies->findManyByImdbIds($imdbIds);
 
         return response()->json([
             'data' => MovieResource::collection($movies),
@@ -52,11 +51,13 @@ class MovieController extends Controller
                 'current_page' => $page,
                 'per_page' => $movies->count(),
                 'source' => 'omdb',
+                'omdb_response' => $results['Response'] ?? null,
+                'omdb_error' => $results['Error'] ?? null,
             ],
         ]);
     }
 
-    public function show(string $imdbId): JsonResponse
+    public function show(Request $request, string $imdbId): JsonResponse
     {
         $movie = $this->movies->getOrFetchByImdbId($imdbId, true);
         if (! $movie) {
@@ -64,9 +65,8 @@ class MovieController extends Controller
                 'message' => 'Movie not found.',
             ], 404);
         }
-        $movie = Movie::withIsFavorited()->where('id', $movie->id)->first();
 
         return MovieResource::make($movie)
-            ->toResponse(request());
+            ->toResponse($request);
     }
 }
