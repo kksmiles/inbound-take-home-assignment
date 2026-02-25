@@ -16,6 +16,14 @@ class MovieController extends Controller
         private readonly MovieRepository $movies,
     ) {}
 
+    public function index()
+    {
+        $movies = $this->movies->getRecent(10);
+
+        return MovieResource::collection($movies)
+            ->toResponse(request());
+    }
+
     public function search(Request $request): JsonResponse
     {
         $validated = $request->validate([
@@ -26,8 +34,14 @@ class MovieController extends Controller
         $page = (int) ($validated['page'] ?? 1);
 
         $results = $this->omdbClient->search($validated['q'], $page);
+        $searchItems = $results['Search'] ?? [];
 
-        $movies = collect($results['Search'] ?? [])->map(function (array $item): array {
+        // Store/refresh search results in the local database for later use
+        if (is_array($searchItems) && $searchItems !== []) {
+            $this->movies->storeSearchResults($searchItems);
+        }
+
+        $movies = collect($searchItems)->map(function (array $item): array {
             return [
                 'imdb_id' => $item['imdbID'] ?? null,
                 'title' => $item['Title'] ?? null,
@@ -42,6 +56,7 @@ class MovieController extends Controller
             'meta' => [
                 'total' => isset($results['totalResults']) ? (int) $results['totalResults'] : $movies->count(),
                 'page' => $page,
+                'per_page' => $movies->count(),
                 'source' => 'omdb',
             ],
         ]);
@@ -50,6 +65,11 @@ class MovieController extends Controller
     public function show(string $imdbId): JsonResponse
     {
         $movie = $this->movies->getOrFetchByImdbId($imdbId);
+        if (! $movie) {
+            return response()->json([
+                'message' => 'Movie not found.',
+            ], 404);
+        }
 
         return MovieResource::make($movie)
             ->toResponse(request());

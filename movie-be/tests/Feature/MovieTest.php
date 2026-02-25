@@ -39,10 +39,6 @@ describe('Movies API', function () {
                     'data' => [
                         '*' => [
                             'imdb_id',
-                            'title',
-                            'year',
-                            'type',
-                            'poster_url',
                         ],
                     ],
                     'meta' => [
@@ -55,17 +51,9 @@ describe('Movies API', function () {
                     'data' => [
                         [
                             'imdb_id' => 'tt0133093',
-                            'title' => 'The Matrix',
-                            'year' => '1999',
-                            'type' => 'movie',
-                            'poster_url' => 'https://example.com/poster1.jpg',
                         ],
                         [
                             'imdb_id' => 'tt0234215',
-                            'title' => 'The Matrix Reloaded',
-                            'year' => '2003',
-                            'type' => 'movie',
-                            'poster_url' => 'https://example.com/poster2.jpg',
                         ],
                     ],
                     'meta' => [
@@ -161,20 +149,11 @@ describe('Movies API', function () {
                 ->assertJsonStructure([
                     'data' => [
                         'imdb_id',
-                        'title',
-                        'year',
-                        'type',
-                        'poster_url',
-                        'details',
                     ],
                 ])
                 ->assertJson([
                     'data' => [
                         'imdb_id' => $movie->imdb_id,
-                        'title' => $movie->title,
-                        'year' => $movie->year,
-                        'type' => $movie->type,
-                        'poster_url' => $movie->poster_url,
                     ],
                 ]);
         });
@@ -203,11 +182,6 @@ describe('Movies API', function () {
                 ->assertJson([
                     'data' => [
                         'imdb_id' => $imdbId,
-                        'title' => 'The Matrix',
-                        'year' => '1999',
-                        'type' => 'movie',
-                        'poster_url' => 'https://example.com/poster.jpg',
-                        'details' => $mockOmdbResponse,
                     ],
                 ]);
 

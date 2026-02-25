@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('type')->nullable();
             $table->string('poster_url')->nullable();
             $table->json('raw_payload')->nullable();
+            $table->boolean('loaded_details')->default(false);
             $table->timestamps();
         });
     }

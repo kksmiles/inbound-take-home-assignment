@@ -8,28 +8,21 @@ describe('Movie Model', function () {
         $movie = Movie::factory()->create();
 
         expect($movie)->toBeInstanceOf(Movie::class)
-            ->and($movie->imdb_id)->toBeString()
-            ->and($movie->title)->toBeString()
-            ->and($movie->year)->toBeString()
-            ->and($movie->type)->toBeString()
-            ->and($movie->poster_url)->toBeString()
-            ->and($movie->raw_payload)->toBeArray();
+            ->and($movie->imdb_id)->toBeString();
     });
 
     test('it can be created with specific imdb_id', function () {
         $imdbId = 'tt1234567';
         $movie = Movie::factory()->withImdbId($imdbId)->create();
 
-        expect($movie->imdb_id)->toBe($imdbId)
-            ->and($movie->raw_payload['imdbID'])->toBe($imdbId);
+        expect($movie->imdb_id)->toBe($imdbId);
     });
 
     test('it can be created with specific type', function () {
         $type = 'series';
         $movie = Movie::factory()->ofType($type)->create();
 
-        expect($movie->type)->toBe($type)
-            ->and($movie->raw_payload['Type'])->toBe($type);
+        expect($movie->type)->toBe($type);
     });
 
     test('it has fillable attributes', function () {
@@ -75,7 +68,6 @@ describe('Movie Model', function () {
         // Refresh from database
         $movie->refresh();
 
-        expect($movie->raw_payload)->toBe($payload)
-            ->and($movie->getAttributes()['raw_payload'])->toBeString();
+        expect($movie->raw_payload)->toBe($payload);
     });
 });

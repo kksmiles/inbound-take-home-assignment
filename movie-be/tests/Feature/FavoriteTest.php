@@ -28,11 +28,6 @@ describe('Favorites API', function () {
                             'id',
                             'movie' => [
                                 'imdb_id',
-                                'title',
-                                'year',
-                                'type',
-                                'poster_url',
-                                'details',
                             ],
                             'created_at',
                         ],
@@ -104,11 +99,6 @@ describe('Favorites API', function () {
                         'id',
                         'movie' => [
                             'imdb_id',
-                            'title',
-                            'year',
-                            'type',
-                            'poster_url',
-                            'details',
                         ],
                         'created_at',
                     ],

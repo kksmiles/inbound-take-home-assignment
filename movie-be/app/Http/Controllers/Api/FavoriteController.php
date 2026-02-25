@@ -34,6 +34,11 @@ class FavoriteController extends Controller
         ]);
 
         $movie = $this->movies->getOrFetchByImdbId($validated['imdb_id']);
+        if (! $movie) {
+            return response()->json([
+                'message' => 'Movie not found.',
+            ], 404);
+        }
 
         /** @var \App\Models\User $user */
         $user = $request->user();
@@ -56,7 +61,7 @@ class FavoriteController extends Controller
 
     public function destroy(Request $request, string $imdbId): JsonResponse
     {
-        $movie = $this->movies->findByImdbId($imdbId);
+        $movie = $this->movies->getOrFetchByImdbId($imdbId);
 
         if (! $movie) {
             return response()->json([

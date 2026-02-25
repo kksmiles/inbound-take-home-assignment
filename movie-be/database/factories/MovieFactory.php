@@ -36,6 +36,7 @@ class MovieFactory extends Factory
                 'Runtime' => fake()->numberBetween(80, 180).' min',
                 'imdbRating' => fake()->randomFloat(1, 1.0, 10.0),
             ],
+            'loaded_details' => true,
         ];
     }
 

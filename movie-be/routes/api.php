@@ -27,6 +27,7 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::get('movies/search', [MovieController::class, 'search']);
+Route::get('movies', [MovieController::class, 'index']);
 Route::get('movies/{imdbId}', [MovieController::class, 'show']);
 
 Route::middleware('auth:api')->group(function () {
