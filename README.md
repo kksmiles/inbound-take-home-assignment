@@ -10,14 +10,13 @@ This assignment is done with Laravel on the backend and React on the frontend. T
 3. Run `php artisan key:generate` to generate the application key.
 4. Run `php artisan sail:install` to install Laravel Sail.
 5. Run `./vendor/bin/sail up -d` to start the Docker containers.
-6. Run `./vendor/bin/sail artisan migrate` to run the database migrations.
-7. Run `./vendor/bin/sail artisan db:seed` to seed the database with sample data.
-8. The backend will be running at `http://localhost:8000`.
+6. Run `./vendor/bin/sail artisan migrate:fresh --seed` to run the database migrations and seed the database.
+7. The backend will be running at `http://localhost:8000`.
 
 ## Frontend
 1. Go to the `movie-fe` directory and run `npm install` to install the dependencies.
-2. Run `npm run dev` to start the development server.
-3. The frontend will be running at `http://localhost:5174`.
+2. Run `npm run build` and then `npm run preview` to start the production server.
+3. The frontend will be running at `http://localhost:4173`.
 
 ---
 

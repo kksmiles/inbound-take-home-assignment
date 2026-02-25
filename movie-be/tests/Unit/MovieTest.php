@@ -33,6 +33,7 @@ describe('Movie Model', function () {
             'type',
             'poster_url',
             'raw_payload',
+            'loaded_details',
         ];
 
         $movie = new Movie;

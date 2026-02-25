@@ -43,7 +43,7 @@ describe('Movies API', function () {
                     ],
                     'meta' => [
                         'total',
-                        'page',
+                        'current_page',
                         'source',
                     ],
                 ])
@@ -58,7 +58,7 @@ describe('Movies API', function () {
                     ],
                     'meta' => [
                         'total' => 2,
-                        'page' => 1,
+                        'current_page' => 1,
                         'source' => 'omdb',
                     ],
                 ]);
@@ -95,7 +95,7 @@ describe('Movies API', function () {
             $response->assertStatus(200)
                 ->assertJson([
                     'meta' => [
-                        'page' => 2,
+                        'current_page' => 2,
                     ],
                 ]);
         });
@@ -132,7 +132,7 @@ describe('Movies API', function () {
                     'data' => [],
                     'meta' => [
                         'total' => 0,
-                        'page' => 1,
+                        'current_page' => 1,
                         'source' => 'omdb',
                     ],
                 ]);

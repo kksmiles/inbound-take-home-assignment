@@ -17,7 +17,7 @@ describe('MovieRepository', function () {
         test('it returns movie when found', function () use (&$repository) {
             $movie = Movie::factory()->withImdbId('tt0133093')->create();
 
-            $result = $repository->findByImdbId('tt0133093');
+            $result = $repository->findByImdbId('tt0133093', false);
 
             expect($result)->toBeInstanceOf(Movie::class)
                 ->and($result->id)->toBe($movie->id)
@@ -25,7 +25,7 @@ describe('MovieRepository', function () {
         });
 
         test('it returns null when movie not found', function () use (&$repository) {
-            $result = $repository->findByImdbId('tt9999999');
+            $result = $repository->findByImdbId('tt9999999', false);
 
             expect($result)->toBeNull();
         });
@@ -38,7 +38,7 @@ describe('MovieRepository', function () {
             // Should not call OMDB client
             $omdbClient->shouldNotReceive('getByImdbId');
 
-            $result = $repository->getOrFetchByImdbId('tt0133093');
+            $result = $repository->getOrFetchByImdbId('tt0133093', false);
 
             expect($result)->toBeInstanceOf(Movie::class)
                 ->and($result->id)->toBe($existingMovie->id)
@@ -62,7 +62,7 @@ describe('MovieRepository', function () {
                 ->once()
                 ->andReturnUsing(fn () => $omdbPayload);
 
-            $result = $repository->getOrFetchByImdbId('tt0852713');
+            $result = $repository->getOrFetchByImdbId('tt0852713', false);
 
             expect($result)->toBeInstanceOf(Movie::class)
                 ->and($result->imdb_id)->toBe('tt0852713');

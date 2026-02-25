@@ -24,6 +24,7 @@ class MovieResource extends JsonResource
             'year' => $this->year,
             'type' => $this->type,
             'poster_url' => $this->poster_url,
+            'is_favorited' => (bool) ($this->is_favorited ?? false),
             'details' => $this->raw_payload,
         ];
     }

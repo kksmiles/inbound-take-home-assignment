@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\MovieResource;
+use App\Models\Movie;
 use App\Repositories\MovieRepository;
 use App\Services\Omdb\OmdbClient;
 use Illuminate\Http\JsonResponse;
@@ -41,21 +42,14 @@ class MovieController extends Controller
             $this->movies->storeSearchResults($searchItems);
         }
 
-        $movies = collect($searchItems)->map(function (array $item): array {
-            return [
-                'imdb_id' => $item['imdbID'] ?? null,
-                'title' => $item['Title'] ?? null,
-                'year' => $item['Year'] ?? null,
-                'type' => $item['Type'] ?? null,
-                'poster_url' => $item['Poster'] ?? null,
-            ];
-        });
+        $imdbIds = collect($searchItems)->pluck('imdbID')->toArray();
+        $movies = Movie::withIsFavorited()->whereIn('imdb_id', $imdbIds)->get();
 
         return response()->json([
-            'data' => $movies,
+            'data' => MovieResource::collection($movies),
             'meta' => [
                 'total' => isset($results['totalResults']) ? (int) $results['totalResults'] : $movies->count(),
-                'page' => $page,
+                'current_page' => $page,
                 'per_page' => $movies->count(),
                 'source' => 'omdb',
             ],
@@ -64,12 +58,13 @@ class MovieController extends Controller
 
     public function show(string $imdbId): JsonResponse
     {
-        $movie = $this->movies->getOrFetchByImdbId($imdbId);
+        $movie = $this->movies->getOrFetchByImdbId($imdbId, true);
         if (! $movie) {
             return response()->json([
                 'message' => 'Movie not found.',
             ], 404);
         }
+        $movie = Movie::withIsFavorited()->where('id', $movie->id)->first();
 
         return MovieResource::make($movie)
             ->toResponse(request());

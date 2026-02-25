@@ -12,6 +12,7 @@ import {
   Icon,
 } from '@chakra-ui/react'
 import UserList from '../components/UserList'
+import { apiFetch, handleJsonResponse } from '../api/client'
 import { FiCheckCircle, FiAlertTriangle, FiUser } from 'react-icons/fi'
 
 function HealthCheck() {
@@ -21,8 +22,8 @@ function HealthCheck() {
 
   const fetchHealthCheck = useCallback(() => {
     setLoading(true)
-    fetch('http://localhost:8000/api/health_check')
-      .then((res) => res.json())
+    apiFetch('/health_check')
+      .then((res) => handleJsonResponse<unknown>(res))
       .then((data) => setResponse(JSON.stringify(data, null, 2)))
       .catch((error) => console.error('Error:', error))
       .finally(() => setLoading(false))
