@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Artisan;
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -12,9 +14,16 @@
 */
 
 pest()->extend(Tests\TestCase::class)
- // ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
-    ->in('Feature');
-
+    ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+    ->beforeEach(function () {
+        Artisan::call('passport:client', [
+            '--personal' => true,
+            '--name' => 'Test Personal Access Client',
+            '--no-interaction' => true,
+            '--quiet' => true,
+        ]);
+    })
+    ->in('Feature', 'Unit');
 /*
 |--------------------------------------------------------------------------
 | Expectations
