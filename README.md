@@ -18,6 +18,8 @@
 7. `./vendor/bin/sail artisan migrate:fresh --seed` を実行してマイグレーションとシーディングを行います。
 8. バックエンドは以下のURLでアクセスできます：  
    `http://localhost:8000`
+9. APIドキュメントは以下のURLでアクセスできます：  
+   `http://localhost:8000/docs`
 
 ---
 
@@ -74,6 +76,8 @@ The backend is located in the `movie-be` directory and the frontend in the `movi
 7. Run `./vendor/bin/sail artisan migrate:fresh --seed` to run migrations and seed the database.
 8. The backend will be available at:  
    `http://localhost:8000`
+9. The API documentation will be available at:  
+   `http://localhost:8000/docs`
 
 ---
 

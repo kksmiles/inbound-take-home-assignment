@@ -9,8 +9,20 @@ use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
+/**
+ * @group Email verification
+ *
+ * Endpoints for sending and handling email verification links.
+ */
 class EmailVerificationController extends Controller
 {
+    /**
+     * Send verification email
+     *
+     * Send an email verification link to the authenticated user.
+     *
+     * @authenticated
+     */
     public function send(Request $request): JsonResponse
     {
         /** @var \App\Models\User $user */
@@ -29,6 +41,14 @@ class EmailVerificationController extends Controller
         ], 202);
     }
 
+    /**
+     * Verify email address
+     *
+     * Mark a user's email address as verified using the link parameters.
+     *
+     * @urlParam id integer required The ID of the user whose email is being verified. Example: 1
+     * @urlParam hash string required The verification hash from the email link.
+     */
     public function verify(Request $request, int $id, string $hash): JsonResponse
     {
         /** @var User|null $user */

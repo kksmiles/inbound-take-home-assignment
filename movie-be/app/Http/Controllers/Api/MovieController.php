@@ -9,6 +9,11 @@ use App\Services\Omdb\OmdbClient;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
+/**
+ * @group Movies
+ *
+ * Endpoints for searching and retrieving movies.
+ */
 class MovieController extends Controller
 {
     public function __construct(
@@ -16,6 +21,11 @@ class MovieController extends Controller
         private readonly MovieRepository $movies,
     ) {}
 
+    /**
+     * List recent movies
+     *
+     * Returns a list of the most recently stored movies.
+     */
     public function index(Request $request): JsonResponse
     {
         $movies = $this->movies->getRecent(10);
@@ -24,6 +34,14 @@ class MovieController extends Controller
             ->toResponse($request);
     }
 
+    /**
+     * Search movies
+     *
+     * Search for movies using the OMDb API and return matched titles.
+     *
+     * @queryParam q string required The search term (title or keyword). Example: The Matrix
+     * @queryParam page integer The page of results to view. Minimum: 1. Example: 2
+     */
     public function search(Request $request): JsonResponse
     {
         $validated = $request->validate([
@@ -57,6 +75,13 @@ class MovieController extends Controller
         ]);
     }
 
+    /**
+     * Show movie details
+     *
+     * Retrieve full details for a movie by its IMDb ID.
+     *
+     * @urlParam imdbId string required The IMDb ID of the movie. Example: tt0133093
+     */
     public function show(Request $request, string $imdbId): JsonResponse
     {
         $movie = $this->movies->getOrFetchByImdbId($imdbId, true);

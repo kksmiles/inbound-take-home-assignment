@@ -10,12 +10,26 @@ use App\Repositories\MovieRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
+/**
+ * @group Favorites
+ *
+ * Endpoints for managing a user's favourite movies.
+ */
 class FavoriteController extends Controller
 {
     public function __construct(
         private readonly MovieRepository $movies,
     ) {}
 
+    /**
+     * List favourites
+     *
+     * Get a paginated list of the authenticated user's favourite movies.
+     *
+     * @authenticated
+     *
+     * @queryParam per_page integer The number of favourites per page. Default: 10. Example: 20
+     */
     public function index(Request $request): JsonResponse
     {
         $userId = $request->user()->id;
@@ -36,6 +50,15 @@ class FavoriteController extends Controller
             ->toResponse($request);
     }
 
+    /**
+     * Add a movie to favourites
+     *
+     * Mark a movie as a favourite for the authenticated user.
+     *
+     * @authenticated
+     *
+     * @bodyParam imdb_id string required The IMDb ID of the movie to favourite. Example: tt0133093
+     */
     public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
@@ -71,6 +94,15 @@ class FavoriteController extends Controller
         ], 201);
     }
 
+    /**
+     * Remove a movie from favourites
+     *
+     * Remove a movie from the authenticated user's favourites.
+     *
+     * @authenticated
+     *
+     * @urlParam imdbId string required The IMDb ID of the movie to remove. Example: tt0133093
+     */
     public function destroy(Request $request, string $imdbId): JsonResponse
     {
         $movie = Movie::where('imdb_id', $imdbId)->first();

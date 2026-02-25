@@ -10,8 +10,25 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
+/**
+ * @group Auth
+ *
+ * Endpoints for registering, logging in and managing the authenticated user.
+ */
 class AuthController extends Controller
 {
+    /**
+     * Register a new user
+     *
+     * Create a new user account and return the created user.
+     *
+     * @unauthenticated
+     *
+     * @bodyParam name string required The name of the user. Example: Jane Doe
+     * @bodyParam email string required The email address of the user. Must be unique. Example: jane@example.com
+     * @bodyParam password string required The password for the account (min 8 characters). Example: password123
+     * @bodyParam password_confirmation string required Must match the password field. Example: password123
+     */
     public function register(Request $request): JsonResponse
     {
         $validated = $request->validate([
@@ -32,6 +49,16 @@ class AuthController extends Controller
             ->setStatusCode(201);
     }
 
+    /**
+     * Log in
+     *
+     * Authenticate an existing user and return an access token.
+     *
+     * @unauthenticated
+     *
+     * @bodyParam email string required The email address of the user. Example: jane@example.com
+     * @bodyParam password string required The user password. Example: password123
+     */
     public function login(Request $request): JsonResponse
     {
         $credentials = $request->validate([
@@ -60,12 +87,26 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Get the authenticated user
+     *
+     * Return the currently authenticated user's details.
+     *
+     * @authenticated
+     */
     public function me(Request $request): JsonResponse
     {
         return UserResource::make($request->user())
             ->toResponse($request);
     }
 
+    /**
+     * Log out
+     *
+     * Revoke the current access token and log the user out.
+     *
+     * @authenticated
+     */
     public function logout(Request $request): JsonResponse
     {
         /** @var \Laravel\Passport\Token|null $token */
